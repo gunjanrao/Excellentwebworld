@@ -1,0 +1,87 @@
+<?php
+
+use Drupal\Core\Entity\Entity\EntityFormDisplay;
+use Drupal\Core\Entity\Entity\EntityViewDisplay;
+
+/**
+ * Implements hook_install().
+ */
+
+ function contract_install() {
+    // Checking the content type.
+    $content_type = \Drupal\node\Entity\NodeType::load('contract');
+
+    if (!$content_type) {
+        // Create the content type.
+        $content_type = \Drupal\node\Entity\NodeType::create([
+            'type' => 'contract',
+            'name' => 'Contract',
+            'description' => 'A content type for contracts.',
+        ]);
+       $content_type->save();
+    }
+
+
+    //defining fields.
+
+    $fields = [
+        'field_document_title' => 'Document Title',
+        'field_recipient_name' => 'Recipient Name',
+        'field_sender_name' => 'Sender Name',
+        'field_date' => 'Date',
+        'field_document_file' => 'Document File',
+    ];
+
+    foreach ($fields as $machine_name => $label) {
+        // Check if field storage exists.
+        if(!\Drupal\field\Entity\FieldStorageConfig::loadByName('node',$machine_name)) {
+            \Drupal\field\Entity\FieldStorageConfig::create([
+                'field_name' => $machine_name,
+                'entity_type' => 'node',
+                'type' => $machine_name === 'field_document_file' ? 'file' : 'string',
+            ])->save();
+
+            \Drupal\field\Entity\FieldConfig::create([
+                'field_name' => $machine_name,
+                'entity_type' => 'node',
+                'bundle' => 'contract',
+                'label' => $label,
+            ])->save();
+        }
+    }
+
+    // Configure the form display.
+    $form_display = EntityFormDisplay::load('node.contract.default')?:EntityFormDisplay::create([
+        'targetEntityType' => 'node',
+        'bundle' => 'contract',
+        'mode' => 'default',
+        'status' => TRUE,
+    ]);
+
+    foreach ($fields as $machine_name => $label) {
+       $form_display->setComponent($machine_name,[
+        'type' => 'string_textfield',
+        'weight' => 0,
+       ]);
+    }
+    $form_display->save();
+
+    $view_display = EntityViewDisplay::load('node.contract.default')?:EntityViewDisplay::create([
+        'targetEntityType' => 'node',
+        'bundle' => 'contract',
+        'mode' => 'default',
+        'status' => TRUE,
+    ]);
+
+    foreach ($fields as $machine_name => $label) {
+        $view_display->setComponent($machine_name,[
+            'label' => 'above',
+            'type' => 'string',
+            'weight' => 0,
+        ]);
+    }
+    $view_display->save();
+ }
+
+
+?>

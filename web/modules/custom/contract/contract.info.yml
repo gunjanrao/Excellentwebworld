@@ -1,0 +1,7 @@
+name: 'Contract Module'
+type: module
+description: 'Custom module to manage contracts.'
+core_version_requirement: ^10 || ^11
+package: custom
+dependencies:
+- drupal:node

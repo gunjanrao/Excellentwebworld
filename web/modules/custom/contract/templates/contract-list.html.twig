@@ -1,0 +1,24 @@
+<table>
+    <thead>
+        <tr>
+            <th>{{'Title'|t }}</th>
+            <th>{{'Date'|t }}</th>
+            <th>{{'Sender'|t }}</th>
+            <th>{{'Recipient'|t }}</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for contract in contracts %}
+        <tr>
+            <td>{{ contract.title }}</td>
+            <td>{{ contract.date }}</td>
+            <td>{{ contract.sender }}</td>
+            <td>{{ contract.recipient }}</td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="4" class="text-center">{{ 'No contracts found'|t }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
