@@ -83,5 +83,17 @@ use Drupal\Core\Entity\Entity\EntityViewDisplay;
     $view_display->save();
  }
 
+ function contract_uninstall() {
+    $nodes = \Drupal::entityTypeManager()->getStorage('node')->loadByProperties(['type' => 'contract']);
 
+    foreach ($nodes as $node) {
+        $node->delete();
+    }
+
+    $content_type = \Drupal::entityTypeManager()->getStorage('node_type')->load('contract');
+
+    if ($content_type) {
+        $content_type->delete();
+    }
+ }
 ?>
