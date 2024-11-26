@@ -1,0 +1,18 @@
+<?php
+
+/**
+ * Implements hook_theme().
+ */
+
+function contract_theme() {
+return [
+    'contract_list' => [
+        'variables' => [
+            'contracts' => [],
+        ],
+    ],
+];
+}
+
+
+?>
